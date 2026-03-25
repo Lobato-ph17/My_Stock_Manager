@@ -13,7 +13,7 @@ public class Produto {
 
     @Override
     public String toString(){
-        return "Produto: " + nome + " | Quantidade: " + quantidade + " | Preço: R$" + String.format("%.2f", preco) ; 
+        return "Produto: " + nome + " | Quantidade: " + quantidade + " | Preço: R$" + String.format(java.util.Locale.US, "%.2f", preco) ; 
     }
 
     

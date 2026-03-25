@@ -14,7 +14,8 @@ public class ArquivoService {
         try {
             Gson gson = new Gson();
             String json = gson.toJson(produtos);
-            FileWriter writer = new FileWriter(ARQUIVO);
+            OutputStreamWriter writer = new OutputStreamWriter(
+                    new FileOutputStream(ARQUIVO), "UTF-8");
             writer.write(json);
             writer.close();
             System.out.println("Dados salvos com sucesso!");
@@ -29,10 +30,11 @@ public class ArquivoService {
             if (!arquivo.exists()) {
                 return new ArrayList<>();
             }
-            BufferedReader reader = new BufferedReader(new FileReader(ARQUIVO));
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(new FileInputStream(ARQUIVO), "UTF-8"));
             StringBuilder conteudo = new StringBuilder();
             String linha;
-            while ((linha = reader.readLine()) != null) {
+            while ((linha = reader.readLine()) != null) {   
                 conteudo.append(linha);
             }
             reader.close();

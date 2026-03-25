@@ -3,6 +3,7 @@ import service.EstoqueService;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import util.ArquivoService;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,6 +13,9 @@ public class Main {
         boolean rodando = true;
 
         EstoqueService estoque = new EstoqueService();
+        ArquivoService arquivoService = new ArquivoService();
+
+        estoque.setProdutos(arquivoService.carregar());
 
         while (rodando) {
             System.out.println("=== Sistema de Estoque ===");
@@ -82,7 +86,7 @@ public class Main {
                     break;
 
                 case 0:
-
+                    arquivoService.salvar(estoque.listar());    
                     rodando = false;
                     break;
             }

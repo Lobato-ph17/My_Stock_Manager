@@ -31,4 +31,8 @@ public class EstoqueService {
         }
         return false;
     }
+
+    public void setProdutos(ArrayList<Produto> produtos){
+        this.produtos = produtos;
+    }
 }
