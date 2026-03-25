@@ -1,3 +1,5 @@
+package model;
+
 public class Produto {
     private String nome;
     private int quantidade;
@@ -11,7 +13,7 @@ public class Produto {
 
     @Override
     public String toString(){
-        return "Produto: " + nome + "| Quantidade: " + quantidade + " | Preço: R$" + preco; 
+        return "Produto: " + nome + " | Quantidade: " + quantidade + " | Preço: R$" + String.format("%.2f", preco) ; 
     }
 
     
