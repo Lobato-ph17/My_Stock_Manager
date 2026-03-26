@@ -1,5 +1,9 @@
 package model;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
 public class Produto {
     private String nome;
     private int quantidade;
@@ -47,6 +51,3 @@ public class Produto {
         this.preco = novoPreco;
     }
 }
-
-
-

@@ -1,9 +1,10 @@
 import model.Produto;
-import service.EstoqueService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import util.ArquivoService;
+import util.DatabaseService;
+import util.ProdutoDAO;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,10 +13,12 @@ public class Main {
 
         boolean rodando = true;
 
-        EstoqueService estoque = new EstoqueService();
-        ArquivoService arquivoService = new ArquivoService();
-
-        estoque.setProdutos(arquivoService.carregar());
+        try {
+            DatabaseService.inicializar();
+        } catch (SQLException e) {
+            System.out.println("Erro ao conectar ao banco: " + e.getMessage());
+        }
+        ProdutoDAO dao = new ProdutoDAO();
 
         while (rodando) {
             System.out.println("=== Sistema de Estoque ===");
@@ -41,52 +44,61 @@ public class Main {
                     scanner.nextLine();
 
                     Produto novoProduto = new Produto(nome, quantidade, preco);
-                    estoque.adicionarProduto(novoProduto);
-                    System.out.println("Produto adicionado com sucesso!");
+
+                    try {
+                        dao.adicionar(novoProduto);
+                        System.out.println("Produto adicionado com sucesso!");
+                    } catch (SQLException e) {
+                        System.out.println("Erro ao adicionar: " + e.getMessage());
+                    }
                     break;
 
                 case 2:
-                    ArrayList<Produto> lista = estoque.listar();
 
-                    if (lista.isEmpty()) {
-                        System.out.println("Nenhum produto cadastrado!");
-                    } else {
-                        for (Produto produto : lista) {
-                            System.out.println(produto);
+                    try {
+                        ArrayList<Produto> lista = dao.listarTodos();
+                        if (lista.isEmpty()) {
+                            System.out.println("Nenhum produto cadastrado!");
+                        } else {
+                            for (Produto produto : lista) {
+                                System.out.println(produto);
+                            }
                         }
+                    } catch (SQLException e) {
+                        System.out.println("Erro ao listar: " + e.getMessage());
                     }
+
                     break;
 
                 case 3:
                     System.out.println("Qual produto deseja buscar?: ");
                     String nomeBusca = scanner.nextLine();
+                    try {
+                        Produto resultado = dao.buscar(nomeBusca);
 
-                    Produto resultado = estoque.buscarProduto(nomeBusca);
-
-    
-                    if(resultado != null){
-                        System.out.println("Produto encontrado:  " + resultado);
-                    }else {
-                        System.out.println("Produto não encontrado");
+                        if (resultado != null) {
+                            System.out.println("Produto encontrado:  " + resultado);
+                        } else {
+                            System.out.println("Produto não encontrado");
+                        }
+                    } catch (SQLException e) {
+                        System.out.println("Erro ao buscar: " + e.getMessage());
                     }
-
                     break;
 
                 case 4:
                     System.out.println("Qual produto deseja remover?: ");
                     String nomeRemover = scanner.nextLine();
 
-                   
-
-                    if(estoque.removerProduto(nomeRemover)) {
-                        System.out.println("Produto removido com Sucesso!");
-                    }else {
-                        System.out.println("Produto não encontrado T.T");
+                    try {
+                        dao.remover(nomeRemover);
+                        System.out.println("Produto removido com sucesso!");
+                    } catch (SQLException e) {
+                        System.out.println("Erro ao remover: " + e.getMessage());
                     }
                     break;
 
                 case 0:
-                    arquivoService.salvar(estoque.listar());    
                     rodando = false;
                     break;
             }
